@@ -131,9 +131,21 @@ INSERT INTO orders (user_id) VALUES
     
 SELECT name FROM users WHERE id IN (SELECT DISTINCT user_id FROM orders);
 
+-- используя JOIN
+SELECT DISTINCT name FROM users
+INNER JOIN orders
+ON users.id = orders.user_id;
+
 /* 2. Выведите список товаров products и разделов catalogs, который соответствует товару. */
 
 SELECT name, (SELECT name FROM catalogs WHERE id = catalog_id) AS 'catalog' FROM products;
+
+-- используя JOIN
+
+SELECT products.name, catalogs.name AS 'catalog'
+FROM products
+INNER JOIN catalogs
+ON products.catalog_id = catalogs.id;
 
 /* 3. Пусть имеется таблица рейсов flights (id, from, to) и таблица городов cities (label, name). 
 Поля from, to и label содержат английские названия городов, поле name — русское. 
@@ -172,4 +184,11 @@ SELECT
 	(SELECT name FROM cities WHERE label = `from`) AS `from`, 
 	(SELECT name FROM cities WHERE label = `to`) AS `to` 
 FROM flights;
+    
+-- используя JOIN
+SELECT id, c1.name AS `from`, c2.name AS `to` FROM flights
+INNER JOIN cities AS c1
+	ON c1.label = flights.`from`
+INNER JOIN cities AS c2
+	ON c2.label = flights.`to`;
     
